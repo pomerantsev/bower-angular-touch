@@ -67,9 +67,10 @@ ngTouch.factory('$swipe', [function() {
   };
 
   function getCoordinates(event) {
-    // Use jQuery originalEvent
-    event = event.originalEvent || event;
-    var touches = event.touches && event.touches.length ? event.touches : [event];
+    var e = (event.changedTouches && event.changedTouches[0]) ||
+        (event.originalEvent && event.originalEvent.changedTouches &&
+            event.originalEvent.changedTouches[0]) ||
+        touches[0].originalEvent || touches[0];
     var e = (event.changedTouches && event.changedTouches[0]) || touches[0];
 
     return {
@@ -315,8 +316,6 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
       return; // Too old.
     }
 
-    // Use jQuery originalEvent
-    event = event.originalEvent || event;
     var touches = event.touches && event.touches.length ? event.touches : [event];
     var x = touches[0].clientX;
     var y = touches[0].clientY;
@@ -359,8 +358,6 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
   // Global touchstart handler that creates an allowable region for a click event.
   // This allowable region can be removed by preventGhostClick if we want to bust it.
   function onTouchStart(event) {
-    // Use jQuery originalEvent
-    event = event.originalEvent || event;
     var touches = event.touches && event.touches.length ? event.touches : [event];
     var x = touches[0].clientX;
     var y = touches[0].clientY;
@@ -406,8 +403,6 @@ ngTouch.directive('ngClick', ['$parse', '$timeout', '$rootElement',
     }
 
     element.on('touchstart', function(event) {
-      // Use jQuery originalEvent
-      event = event.originalEvent || event;
       tapping = true;
       tapElement = event.target ? event.target : event.srcElement; // IE uses srcElement.
       // Hack for Safari, which can target text nodes instead of containers.
